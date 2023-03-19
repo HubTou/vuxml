@@ -48,7 +48,7 @@ The **get_vulns_by_references**() function returns a dictionary of VID by catego
 The **get_vulns_by_discovery_dates**(), **get_vulns_by_discovery_dates**() and **get_vulns_by_discovery_dates**() functions
 return a dictionary of VID by discovery, entry or modified dates from a VuXML data structure.
 
-The **list search_vulns_by_regex**() function returns a list of VID by regular expression in topics and/or descriptions.
+The **search_vulns_by_regex**() function returns a list of VID by regular expression in topics and/or descriptions.
 
 The **search_vulns_by_reference**() function returns a list of VID by source & identifier in references.
 At least one of the *source* and *identifier* parameters should be defined.
