@@ -10,3 +10,4 @@ into account when checking if a vulnerable Python package is also a vulnerable F
 
 ## Other possible features
 * Disabling color output.
+

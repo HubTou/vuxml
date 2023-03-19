@@ -1,0 +1,202 @@
+.Dd March 19, 2023
+.Dt VUXML 3
+.Os
+.Sh NAME
+.Nm vuxml
+.Nd FreeBSD VuXML library
+.Sh SYNOPSIS
+.Em import vuxml
+.Pp
+.Ft Dict
+.Fo vuxml.load_vuxml
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_topics
+.Fa "Dict vuxml_data"
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_packages
+.Fa "Dict vuxml_data"
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_references
+.Fa "Dict vuxml_data"
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_discovery_dates
+.Fa "Dict vuxml_data"
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_entry_dates
+.Fa "Dict vuxml_data"
+.Fc
+.Ft Dict
+.Fo vuxml.get_vulns_by_modified_dates
+.Fa "Dict vuxml_data"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_regex
+.Fa "Dict vuxml_data"
+.Fa "String regex_string"
+.Fa "Boolean in_topics=True"
+.Fa "Boolean in_descriptions=True"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_reference
+.Fa "Dict vuxml_data"
+.Fa "String source"
+.Fa "String identifier"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_package
+.Fa "Dict vuxml_data"
+.Fa "String package_name"
+.Fa "String package_version"
+.Fa "Boolean regex_names=False"
+.Fc
+.Ft Boolean
+.Fo vuxml.is_valid_date
+.Fa "String date_string"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_discovery_date
+.Fa "Dict vuxml_data"
+.Fa "String date_string"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_entry_date
+.Fa "Dict vuxml_data"
+.Fa "String date_string"
+.Fc
+.Ft List
+.Fo vuxml.search_vulns_by_modified_date
+.Fa "Dict vuxml_data"
+.Fa "String date_string"
+.Fc
+.Fo vuxml.print_vuln
+.Fa "String vid"
+.Fa "Dict vulnerability_data"
+.Fa "Boolean show_description=False"
+.Fc
+.Sh DESCRIPTION
+The
+.Fn load_vuxml
+function downloads or reuse a FreeBSD VuXML library and returns it as a Python dictionary.
+.Pp
+The
+.Fn get_vulns_by_topics
+function returns a dictionary of vulnerabilities IDs (VID) by topics from a VuXML data structure.
+.Pp
+The
+.Fn get_vulns_by_packages
+function returns a dictionary of VID by packages/versions from a VuXML data structure.
+.Pp
+The
+.Fn get_vulns_by_references
+function returns a dictionary of VID by category/reference from a VuXML data structure.
+.Pp
+The
+.Fn get_vulns_by_discovery_dates ,
+.Fn get_vulns_by_discovery_dates
+and
+.Fn get_vulns_by_discovery_dates
+functions
+return a dictionary of VID by discovery, entry or modified dates from a VuXML data structure.
+.Pp
+The
+.Fn search_vulns_by_regex
+function returns a list of VID by regular expression in topics and/or descriptions.
+.Pp
+The
+.Fn search_vulns_by_reference
+function returns a list of VID by source & identifier in references.
+At least one of the
+.Fa source
+and
+.Fa identifier
+parameters should be defined.
+.Pp
+The
+.Fn search_vulns_by_package
+function returns a list of VID by name & version in affects.
+.Fa package_name
+is mandatory,
+.Fa package_version
+is optional.
+.Fa regex_names
+indicates if the
+.Fa package_name
+is a regular expression.
+.Pp
+The
+.Fn is_valid_date
+function returns True if the given string is a recognized date format (ie. "YYYY-MM-DD", "YYYY-MM" or "YYYY").
+.Pp
+The
+.Fn search_vulns_by_discovery_date
+function returns a list of VID by date in discovery dates.
+.Pp
+The
+.Fn search_vulns_by_entry_date
+function returns a list of VID by date in entry dates.
+.Pp
+The
+.Fn search_vulns_by_modified_date
+function returns a list of VID by date in modified dates.
+.Pp
+The
+.Fn print_vuln
+function pretty prints a vulnerability from a VID and a vulnerability data structure.
+The optional
+.Fa show_description
+parameter indicates if a text rendering of the description field (in HTML) is required.
+.Sh ENVIRONMENT
+The
+.Ev VUXML_DEBUG
+environment variable can be set to any value to enable debug mode.
+.Pp
+The
+.Ev LOCALAPPDATA
+and
+.Ev TMP
+environment variables under Windows, and
+.Ev HOME ,
+.Ev TMPDIR
+and
+.Ev TMP
+environment variables under other operating systems can influence of the caching directory used.
+.Sh SEE ALSO
+.Xr vuxml 1 ,
+.Lk https://www.vuxml.org/ VuXML website
+.Lk https://www.vuxml.org/freebsd/ FreeBSD VuXML website
+.Lk https://docs.freebsd.org/en/books/porters-handbook/security/ VuXML database explanation in the Porter's handbook
+.Lk https://www.freshports.org/security/vuxml/ VuXML database as a FreeBSD port
+.Xr pkg-audit 8 ,
+.Xr vxquery
+.Sh STANDARDS
+The
+.Lb vuxml
+is not a standard UNIX one.
+.Pp
+It tries to follow the PEP 8 style guide for Python code.
+.Sh HISTORY
+This library was made for the
+.Lk https://github.com/HubTou/PNU PNU project
+.Pp
+While working on the
+.Xr pipinfo 1
+tool, I noticed that some Python packages installed as FreeBSD ports
+where marked as vulnerable in Python advisories but not in FreeBSD ports advisories.
+.Pp
+I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
+.Pp
+So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
+and got carried away writing a full utility demonstrating its use!
+.Sh LICENSE
+This library is available under the 3-clause BSD license.
+.Sh AUTHORS
+.An Hubert Tournier
+.Sh CAVEATS
+PORTREVISION and PORTEPOCH (ie. software versions ending with "_number" or ",number")
+are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
+I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).

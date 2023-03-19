@@ -1,0 +1,217 @@
+.Dd March 19, 2023
+.Dt VUXML 1
+.Os
+.Sh NAME
+.Nm vuxml
+.Nd FreeBSD VuXML query tool
+.Sh SYNOPSIS
+.Nm
+.Op Fl -desc|-D
+.Op Fl -id|-i Ar VID
+.Op Fl -topic|-t Ar RE
+.Op Fl -keyword|-k Ar RE
+.Op Fl -package|-p Ar PID
+.Op Fl -re-names|-R
+.Op Fl -sources|-s
+.Op Fl -ref|-r Ar RID
+.Op Fl -discovery|-d Ar DATE
+.Op Fl -entry|-e Ar DATE
+.Op Fl -modified|-m Ar DATE
+.Op Fl -debug
+.Op Fl -help|-?
+.Op Fl -version
+.Op Fl -
+.Sh DESCRIPTION
+The
+.Nm
+utility provides easy and flexible ways to query the FreeBSD VuXML database of security issues in FreeBSD and its ports collection.
+.Pp
+You can search or explore the database:
+.Bl -bullet
+.It
+by vulnerability ID (with the
+.Op Fl -id|-i
+option),
+.It
+by regular expression in topics (with the
+.Op Fl -topic|-t
+option),
+.It
+by regular expression in topics and descriptions (with the
+.Op Fl -keyword|-k
+option),
+.It
+by package name or package name and version (with the
+.Op Fl -package|-p
+option),
+.Bl -bullet
+.It
+the package name can be treated as a regular expression (with the
+.Op Fl -re-names|-R
+option),
+.El
+.It
+by reference source, reference source and ID, or ID (with the
+.Op Fl -ref|-r
+option),
+.Bl -bullet
+.It
+existing sources can be listed (with the
+.Op Fl -sources|-s
+option),
+.El
+.It
+by discovery, entry or modification dates (with the
+.Op Fl -discovery|-d ,
+.Op Fl -entry|-e
+or
+.Op Fl -modified|-m
+options),
+.Bl -bullet
+.It
+these dates can be a specific day, month or year.
+.El
+.El
+.Pp
+For all these queries the detailed description is not printed, unless you use the
+.Op Fl -desc|-d
+option to render the HTML description as text.
+.Pp
+For the package and reference queries, the package and version, or reference source and ID, are separated using the '~' character.
+.Pp
+All the options can be used several times and their results are cumulative (ie. treated as logical OR).
+.Ss OPTIONS
+.Op Fl -desc|-D
+Print description
+.Pp
+.Op Fl -id|-i Ar VID
+Search for the specified Vulnerability ID
+.Pp
+.Op Fl -topic|-t Ar RE
+Search for the specified regex in topics
+.Pp
+.Op Fl -keyword|-k Ar RE
+Search for the specified regex in topics and desc.
+.Pp
+.Op Fl -package|-p Ar PID
+Search for the specified name in affected packages. PID can also be name~version
+.Pp
+.Op Fl -re-names|-R
+The name part of a PID is a regex
+.Pp
+.Op Fl -sources|-s
+List references sources
+.Pp
+.Op Fl -ref|-r Ar RID
+Search for the specified ID in references. RID can also be source~, source~ID
+.Pp
+.Op Fl -discovery|-d Ar DATE
+Search for the specified date in discovery dates
+.Pp
+.Op Fl -entry|-e Ar DATE
+Search for the specified date in entry dates
+.Pp
+.Op Fl -modified|-m Ar DATE
+Search for the specified date in modified dates. DATE can be YYYY-MM-DD, YYYY-MM or YYYY
+.Pp
+.Op Fl -debug
+Enable debug mode
+.Pp
+.Op Fl -help|-?
+Print usage and this help message and exit
+.Pp
+.Op Fl -version
+Print version and exit
+.Pp
+.Op Fl -
+Options processing terminator
+.Sh ENVIRONMENT
+The
+.Ev VUXML_DEBUG
+environment variable can be set to any value to enable debug mode.
+.Pp
+The
+.Ev LOCALAPPDATA
+and
+.Ev TMP
+environment variables under Windows, and
+.Ev HOME ,
+.Ev TMPDIR
+and
+.Ev TMP
+environment variables under other operating systems can influence of the caching directory used.
+.Sh FILES
+The
+.Nm
+utility will attempt to maintain a caching directory for the web service it uses, where the downloaded database will be re-used within the next 24 hours.
+.Pp
+This directory will be located in one of the following places:
+.Bl -bullet
+.It
+Windows:
+.Bl -bullet
+.It
+.Pa %LOCALAPPDATA%/cache/vuxml
+.It
+.Pa %TMP%/cache/vuxml
+.El
+.It
+Unix:
+.Bl -bullet
+.It
+.Pa ${HOME}/.cache/vuxml
+.It
+.Pa ${TMPDIR}/.cache/vuxml
+.It
+.Pa ${TMP}/.cache/vuxml
+.El
+.El
+.Sh EXIT STATUS
+.Ex -std vuxml
+.Sh EXAMPLES
+Use the following command to search for vulnerabilities affecting the "gnutls" package:
+.Bd -literal
+vuxml -p gnutls
+.Ed
+.Pp
+And the following one to search for vulnerabilities affecting packages whose name starts with "gnutls" ("gnutls", "gnutls-devel", "gnutls3" will match, while "linux-f10-gnutls" won't):
+.Bd -literal
+vuxml -Rp "^gnutls"
+.Ed
+.Sh SEE ALSO
+.Xr vuxml 3 ,
+.Lk https://www.vuxml.org/ VuXML website
+.Lk https://www.vuxml.org/freebsd/ FreeBSD VuXML website
+.Lk https://docs.freebsd.org/en/books/porters-handbook/security/ VuXML database explanation in the Porter's handbook
+.Lk https://www.freshports.org/security/vuxml/ VuXML database as a FreeBSD port
+.Xr pkg-audit 8 ,
+.Xr vxquery
+.Sh STANDARDS
+The
+.Nm
+utility is not a standard UNIX command.
+.Pp
+It tries to follow the PEP 8 style guide for Python code.
+.Sh PORTABILITY
+Tested OK under Windows.
+.Sh HISTORY
+This implementation was made for the
+.Lk https://github.com/HubTou/PNU PNU project
+.Pp
+While working on the
+.Xr pipinfo 1
+tool, I noticed that some Python packages installed as FreeBSD ports
+where marked as vulnerable in Python advisories but not in FreeBSD ports advisories.
+.Pp
+I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
+.Pp
+So I made a library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
+and got carried away writing this utility to demonstrate the use of the library!
+.Sh LICENSE
+This utility is available under the 3-clause BSD license.
+.Sh AUTHORS
+.An Hubert Tournier
+.Sh CAVEATS
+PORTREVISION and PORTEPOCH (ie. software versions ending with "_number" or ",number")
+are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
+I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).
