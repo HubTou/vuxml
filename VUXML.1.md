@@ -1,7 +1,7 @@
 # VUXML(1)
 
 ## NAME
-vuxml - FreeBSD VuXML library and query tool
+vuxml - FreeBSD VuXML query tool
 
 ## SYNOPSIS
 **vuxml**
@@ -61,7 +61,10 @@ Options | Use
 --|Options processing terminator
 
 ## ENVIRONMENT
-The VUXML_DEBUG environment variable can be set to any value to enable debug mode.
+The *VUXML_DEBUG* environment variable can be set to any value to enable debug mode.
+
+The *LOCALAPPDATA* and *TMP* environment variables under Windows, and *HOME*, *TMPDIR* and *TMP* environment variables
+under other operating systems can influence of the caching directory used.
 
 ## FILES
 The *vuxml* utility will attempt to maintain a caching directory for the web service it uses, where the downloaded database will be re-used within the next 24 hours.
@@ -91,6 +94,7 @@ vuxml -Rp "^gnutls"
 ```
 
 ## SEE ALSO
+[vuxml(3)](https://github.com/HubTou/vuxml/blob/main/VUXML.3.md),
 [VuXML website](https://www.vuxml.org/),
 [FreeBSD VuXML website](https://www.vuxml.org/freebsd/),
 [VuXML database explanation in the Porter's handbook](https://docs.freebsd.org/en/books/porters-handbook/security/),
@@ -109,7 +113,8 @@ Tested OK under Windows.
 ## HISTORY
 This implementation was made for the [PNU project](https://github.com/HubTou/PNU).
 
-While working on the pipinfo(1) tool, I noticed that some Python packages installed as FreeBSD ports where marked as vulnerable in Python advisories but not in FreeBSD advisories.
+While working on the [pipinfo(1)](https://github.com/HubTou/pipinfo) tool, I noticed that some Python packages installed as FreeBSD ports
+where marked as vulnerable in [Python advisories](https://github.com/pypa/advisory-database) but not in [FreeBSD ports advisories](https://www.vuxml.org/freebsd/index.html).
 
 I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
 
@@ -122,7 +127,9 @@ This utility is available under the [3-clause BSD license](https://opensource.or
 ## AUTHORS
 [Hubert Tournier](https://github.com/HubTou)
 
-## CAVEATS
+## CAVEATSWhile working on the [pipinfo(1)](https://github.com/HubTou/pipinfo) tool, I noticed that some Python packages installed as FreeBSD ports
+where marked as vulnerable in [Python advisories](https://github.com/pypa/advisory-database) but not in [FreeBSD ports advisories](https://www.vuxml.org/freebsd/index.html).
+
 [PORTREVISION and PORTEPOCH](https://people.freebsd.org/~olivierd/porters-handbook/makefile-naming.html) (ie. software versions ending with "\_number" or ",number")
 are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
 I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).
