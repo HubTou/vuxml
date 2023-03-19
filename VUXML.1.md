@@ -118,8 +118,8 @@ where marked as vulnerable in [Python advisories](https://github.com/pypa/adviso
 
 I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
 
-So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
-and got carried away writing a full utility demonstrating the use of this library!
+So I made a library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
+and got carried away writing this utility to demonstrate the use of the library!
 
 ## LICENSE
 This utility is available under the [3-clause BSD license](https://opensource.org/licenses/BSD-3-Clause).
