@@ -127,9 +127,7 @@ This utility is available under the [3-clause BSD license](https://opensource.or
 ## AUTHORS
 [Hubert Tournier](https://github.com/HubTou)
 
-## CAVEATSWhile working on the [pipinfo(1)](https://github.com/HubTou/pipinfo) tool, I noticed that some Python packages installed as FreeBSD ports
-where marked as vulnerable in [Python advisories](https://github.com/pypa/advisory-database) but not in [FreeBSD ports advisories](https://www.vuxml.org/freebsd/index.html).
-
+## CAVEATS
 [PORTREVISION and PORTEPOCH](https://people.freebsd.org/~olivierd/porters-handbook/makefile-naming.html) (ie. software versions ending with "\_number" or ",number")
 are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
 I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).
