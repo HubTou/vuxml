@@ -72,7 +72,7 @@ The optional *show_description* parameter indicates if a text rendering of the d
 The *VUXML_DEBUG* environment variable can be set to any value to enable debug mode.
 
 The *LOCALAPPDATA* and *TMP* environment variables under Windows, and *HOME*, *TMPDIR* and *TMP* environment variables
-under other operating systems can influence of the caching directory used.
+under other operating systems can influence the caching directory used.
 
 ## SEE ALSO
 [vuxml(1)](https://github.com/HubTou/vuxml/blob/main/VUXML.1.md),
