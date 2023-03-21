@@ -64,7 +64,7 @@ Options | Use
 The *VUXML_DEBUG* environment variable can be set to any value to enable debug mode.
 
 The *LOCALAPPDATA* and *TMP* environment variables under Windows, and *HOME*, *TMPDIR* and *TMP* environment variables
-under other operating systems can influence of the caching directory used.
+under other operating systems can influence the caching directory used.
 
 ## FILES
 The *vuxml* utility will attempt to maintain a caching directory for the web service it uses, where the downloaded database will be re-used within the next 24 hours.
