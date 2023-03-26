@@ -94,7 +94,7 @@ This implementation was made for the [PNU project](https://github.com/HubTou/PNU
 While working on the [pipinfo(1)](https://github.com/HubTou/pipinfo) tool, I noticed that some Python packages installed as FreeBSD ports
 where marked as vulnerable in [Python advisories](https://github.com/pypa/advisory-database) but not in [FreeBSD ports advisories](https://www.vuxml.org/freebsd/index.html).
 
-I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
+I made a [tool to check the 4000+ FreeBSD ports of Python packages](https://github.com/HubTou/pysec2vuxml/blob/main/README.md), and found around 1% of them vulnerable.
 
 So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
 and got carried away writing a full utility demonstrating its use!
