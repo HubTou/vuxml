@@ -13,13 +13,15 @@ import uuid
 
 import libpnu
 
-from .library import load_vuxml, print_vuln, search_vulns_by_regex, search_vulns_by_package, \
-                     search_vulns_by_reference, get_vulns_by_references, \
+from .library import load_vuxml, get_vulns_by_topics, get_vulns_by_packages, \
+                     get_vulns_by_references, get_vulns_by_discovery_dates, \
+                     get_vulns_by_entry_dates, get_vulns_by_modified_dates, search_vulns_by_regex, \
+                     search_vulns_by_reference, search_vulns_by_package, is_valid_date, \
                      search_vulns_by_discovery_date, search_vulns_by_entry_date, \
-                     search_vulns_by_modified_date, is_valid_date
+                     search_vulns_by_modified_date, print_vuln
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.0.0 (March 19, 2023) by Hubert Tournier $"
+ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.0.1 (March 2, 2024) by Hubert Tournier $"
 
 # Default parameters. Can be overcome by environment variables, then command line options
 parameters = {

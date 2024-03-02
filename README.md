@@ -5,6 +5,7 @@ use one of the following commands, depending on if you want only this tool, the 
 ```
 pip install pnu-vuxml
 pip install PNU
+pip install 'PNU[freebsd]' # if you use a platform other than FreeBSD
 pip install pytnix
 ```
 
