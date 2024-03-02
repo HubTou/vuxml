@@ -367,7 +367,7 @@ def search_vulns_by_package(vuxml, package_name, package_version, regex_names=Fa
                             altered_affected_version = re.sub(r"_.*", "", affected_version)
                             altered_affected_version = re.sub(r",.*", "", altered_affected_version)
                             altered_affected_version = re.sub(r"\.\*", "", altered_affected_version)
-                            logging.warning(
+                            logging.debug(
                                 "Version number '%s' handled as '%s'",
                                 affected_version,
                                 altered_affected_version

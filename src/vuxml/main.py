@@ -21,7 +21,7 @@ from .library import load_vuxml, get_vulns_by_topics, get_vulns_by_packages, \
                      search_vulns_by_modified_date, print_vuln
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.0.1 (March 2, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.0.2 (March 2, 2024) by Hubert Tournier $"
 
 # Default parameters. Can be overcome by environment variables, then command line options
 parameters = {
