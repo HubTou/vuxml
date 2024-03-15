@@ -88,6 +88,11 @@ The **vuxml** library is not a standard UNIX one.
 
 It tries to follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for [Python](https://www.python.org/) code.
 
+## PORTABILITY
+Tested OK under Windows.
+
+Packaged for FreeBSD as *pyXX-pnu-vuxml*.
+
 ## HISTORY
 This implementation was made for the [PNU project](https://github.com/HubTou/PNU).
 

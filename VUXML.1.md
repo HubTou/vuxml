@@ -110,6 +110,8 @@ It tries to follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style 
 ## PORTABILITY
 Tested OK under Windows.
 
+Packaged for FreeBSD as *pyXX-pnu-vuxml*.
+
 ## HISTORY
 This implementation was made for the [PNU project](https://github.com/HubTou/PNU).
 

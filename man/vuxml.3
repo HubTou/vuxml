@@ -1,4 +1,4 @@
-.Dd March 21, 2023
+.Dd March 15, 2024
 .Dt VUXML 3
 .Os
 .Sh NAME
@@ -130,7 +130,7 @@ is a regular expression.
 .Pp
 The
 .Fn is_valid_date
-function returns True if the given string is a recognized date format (ie. "YYYY-MM-DD", "YYYY-MM" or "YYYY").
+function returns True if the given string is a recognized date format (ie. "YYYY\-MM\-DD", "YYYY\-MM" or "YYYY").
 .Pp
 The
 .Fn search_vulns_by_discovery_date
@@ -169,9 +169,9 @@ environment variables under other operating systems can influence the caching di
 .Xr vuxml 1 ,
 .Lk https://www.vuxml.org/ VuXML website
 .Lk https://www.vuxml.org/freebsd/ FreeBSD VuXML website
-.Lk https://docs.freebsd.org/en/books/porters-handbook/security/ VuXML database explanation in the Porter's handbook
+.Lk https://docs.freebsd.org/en/books/porters\-handbook/security/ VuXML database explanation in the Porter's handbook
 .Lk https://www.freshports.org/security/vuxml/ VuXML database as a FreeBSD port
-.Xr pkg-audit 8 ,
+.Xr pkg\-audit 8 ,
 .Xr vxquery
 .Sh STANDARDS
 The
@@ -179,6 +179,13 @@ The
 is not a standard UNIX one.
 .Pp
 It tries to follow the PEP 8 style guide for Python code.
+.Sh PORTABILITY
+Tested OK under Windows.
+.Pp
+Packaged for
+.Fx
+as
+.Em pyXX\\-pnu\\-vuxml .
 .Sh HISTORY
 This library was made for the
 .Lk https://github.com/HubTou/PNU PNU project
@@ -193,10 +200,10 @@ I made a tool to check the 4000+ FreeBSD ports of Python packages, and found aro
 So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
 and got carried away writing a full utility demonstrating its use!
 .Sh LICENSE
-This library is available under the 3-clause BSD license.
+This library is available under the 3\-clause BSD license.
 .Sh AUTHORS
 .An Hubert Tournier
 .Sh CAVEATS
 PORTREVISION and PORTEPOCH (ie. software versions ending with "_number" or ",number")
 are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
-I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).
+I would have to develop my own versions comparison library in order to handle that (well, maybe one day :\-) ).

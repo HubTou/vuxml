@@ -21,7 +21,7 @@ from .library import load_vuxml, get_vulns_by_topics, get_vulns_by_packages, \
                      search_vulns_by_modified_date, print_vuln
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.0.2 (March 2, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: vuxml - FreeBSD VuXML library and query tool v1.1.0 (March 15, 2024) by Hubert Tournier $"
 
 # Default parameters. Can be overcome by environment variables, then command line options
 parameters = {
@@ -70,13 +70,6 @@ def _display_help():
     print("  --                   Options processing terminator", file=sys.stderr)
     print(file=sys.stderr)
     #pylint: enable=C0301
-
-
-####################################################################################################
-def _handle_interrupts(signal_number, current_stack_frame):
-    """ Prevent SIGINT signals from displaying an ugly stack trace """
-    print(" Interrupted!\n", file=sys.stderr)
-    sys.exit(0)
 
 
 ####################################################################################################
@@ -232,7 +225,7 @@ def main():
     program_name = os.path.basename(sys.argv[0])
 
     libpnu.initialize_debugging(program_name)
-    libpnu.handle_interrupt_signals(_handle_interrupts)
+    libpnu.handle_interrupt_signals(libpnu.interrupt_handler_function)
     _process_environment_variables()
     _ = _process_command_line()
 
