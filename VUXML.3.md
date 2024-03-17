@@ -99,7 +99,7 @@ This implementation was made for the [PNU project](https://github.com/HubTou/PNU
 While working on the [pipinfo(1)](https://github.com/HubTou/pipinfo) tool, I noticed that some Python packages installed as FreeBSD ports
 where marked as vulnerable in [Python advisories](https://github.com/pypa/advisory-database) but not in [FreeBSD ports advisories](https://www.vuxml.org/freebsd/index.html).
 
-I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
+I made a tool called [pysec2vuxml](https://github.com/HubTou/pysec2vuxml) to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
 
 So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
 and got carried away writing a full utility demonstrating its use!
@@ -111,7 +111,7 @@ This library is available under the [3-clause BSD license](https://opensource.or
 [Hubert Tournier](https://github.com/HubTou)
 
 ## CAVEATS
-[PORTREVISION and PORTEPOCH](https://people.freebsd.org/~olivierd/porters-handbook/makefile-naming.html) (ie. software versions ending with "\_number" or ",number")
-are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
-I would have to develop my own versions comparison library in order to handle that (well, maybe one day :-) ).
+[PORTEPOCH](https://people.freebsd.org/~olivierd/porters-handbook/makefile-naming.html) (ie. software versions ending with ",number")
+is not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
 
+Exotic version numbers (ie. with letters for example) are also not taken into account.

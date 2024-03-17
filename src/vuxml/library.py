@@ -15,36 +15,22 @@ import urllib.request
 import colorama
 import defusedxml.ElementTree
 import html2text
+import libpnu
 import packaging.version
+
+LATEST_VUXML = "https://www.vuxml.org/freebsd/vuln.xml.xz"
 
 
 ####################################################################################################
 def _download_vuxml():
     """ Download and cache the latest FreeBSD VuXML version """
     # Where do we want to cache the file
-    filename = ''
-    directory = ''
-    if os.name == 'nt':
-        if 'LOCALAPPDATA' in os.environ:
-            directory = os.environ['LOCALAPPDATA'] + os.sep + "cache" + os.sep + "vuxml"
-        elif 'TMP' in os.environ:
-            directory = os.environ['TMP'] + os.sep + "vuxml"
-    else: # os.name == 'posix':
-        if 'HOME' in os.environ:
-            directory = os.environ['HOME'] + os.sep + ".cache" + os.sep + "vuxml"
-        elif 'TMPDIR' in os.environ:
-            directory = os.environ['TMPDIR'] + os.sep + "vuxml"
-        elif 'TMP' in os.environ:
-            directory = os.environ['TMP'] + os.sep + "vuxml"
+    filename = ""
+    directory = libpnu.get_caching_directory("vuxml")
     if directory:
-        try:
-            os.makedirs(directory, exist_ok=True)
-        except OSError:
-            directory = ''
-    if directory:
-        filename = directory + os.sep + 'vuln.xml'
+        filename = directory + os.sep + "vuln.xml"
     else:
-        filename = 'vuln.xml'
+        filename = "vuln.xml"
 
     # If there's a caching file of less than 1 day, use it
     if filename \
@@ -53,21 +39,20 @@ def _download_vuxml():
         return filename
 
     # Download the latest version
-    url = 'https://www.vuxml.org/freebsd/vuln.xml.xz'
     try:
-        with urllib.request.urlopen(url) as http:
+        with urllib.request.urlopen(LATEST_VUXML) as http:
             xz_data = http.read()
     except urllib.error.HTTPError as error:
-        logging.error("Error while fetching '%s': %s", url, error)
-        return ''
+        logging.error("Error while fetching '%s': %s", LATEST_VUXML, error)
+        return ""
 
     # Uncompress the data
     data = lzma.decompress(xz_data)
-    with open(filename, "w", encoding='utf-8') as file:
-        for line in data.decode('utf-8', errors='ignore').split('\n'):
-            if not(line.startswith('<!DOCTYPE') \
-            or line.startswith('<!ENTITY') \
-            or line.startswith(']>')):
+    with open(filename, "w", encoding="utf-8") as file:
+        for line in data.decode("utf-8", errors="ignore").split('\n'):
+            if not(line.startswith("<!DOCTYPE") \
+            or line.startswith("<!ENTITY") \
+            or line.startswith("]>")):
                 file.write(line + '\n')
 
     return filename
@@ -79,7 +64,7 @@ def _get_sub_description(node):
     description = ""
 
     for element in node:
-        tag = re.sub(r'{[^}]*}', '', element.tag)
+        tag = re.sub(r"{[^}]*}", "", element.tag)
         if element.attrib:
             description += f"<{tag}"
             for key, value in element.attrib.items():
@@ -108,23 +93,23 @@ def load_vuxml():
 
     vuxml = {}
     for vuln in root:
-        vuln_vid = vuln.attrib['vid']
+        vuln_vid = vuln.attrib["vid"]
         vuxml[vuln_vid] = {}
 
         for element1 in vuln:
-            tag1 = re.sub(r'{[^}]*}', '', element1.tag)
-            if tag1 == 'topic':
-                vuxml[vuln_vid]['topic'] = element1.text.strip()
+            tag1 = re.sub(r"{[^}]*}", "", element1.tag)
+            if tag1 == "topic":
+                vuxml[vuln_vid]["topic"] = element1.text.strip()
                 continue
-            elif tag1 == 'affects':
-                vuxml[vuln_vid]['affects'] = {}
-            elif tag1 == 'description':
-                vuxml[vuln_vid]['description'] = ""
-            elif tag1 == 'references':
-                vuxml[vuln_vid]['references'] = []
-            elif tag1 == 'dates':
-                vuxml[vuln_vid]['dates'] = {}
-            elif tag1 == 'cancelled':
+            if tag1 == "affects":
+                vuxml[vuln_vid]["affects"] = {}
+            elif tag1 == "description":
+                vuxml[vuln_vid]["description"] = ""
+            elif tag1 == "references":
+                vuxml[vuln_vid]["references"] = []
+            elif tag1 == "dates":
+                vuxml[vuln_vid]["dates"] = {}
+            elif tag1 == "cancelled":
                 del vuxml[vuln_vid]
                 continue
             else:
@@ -132,48 +117,48 @@ def load_vuxml():
 
             description = ""
             for element2 in element1:
-                tag2 = re.sub(r'{[^}]*}', '', element2.tag)
+                tag2 = re.sub(r"{[^}]*}", "", element2.tag)
                 if element2.text is not None:
                     text = element2.text.strip()
                 else:
-                    text = ''
+                    text = ""
 
-                if tag1 == 'affects':
+                if tag1 == "affects":
                     names = []
                     ranges = []
                     for element3 in element2:
-                        tag3 = re.sub(r'{[^}]*}', '', element3.tag)
-                        if tag3 == 'name':
+                        tag3 = re.sub(r"{[^}]*}", "", element3.tag)
+                        if tag3 == "name":
                             names.append(element3.text)
-                        elif tag3 == 'range':
+                        elif tag3 == "range":
                             version = []
                             for element4 in element3:
-                                tag4 = re.sub(r'{[^}]*}', '', element4.tag)
+                                tag4 = re.sub(r"{[^}]*}", "", element4.tag)
                                 if tag4 == 'lt':
-                                    version.append(['<', f'{element4.text}'])
-                                elif tag4 == 'le':
-                                    version.append(['<=', f'{element4.text}'])
-                                elif tag4 == 'eq':
-                                    version.append(['==', f'{element4.text}'])
-                                elif tag4 == 'ge':
-                                    version.append(['>=', f'{element4.text}'])
-                                elif tag4 == 'gt':
-                                    version.append(['>', f'{element4.text}'])
+                                    version.append(["<", f"{element4.text}"])
+                                elif tag4 == "le":
+                                    version.append(['<=', f"{element4.text}"])
+                                elif tag4 == "eq":
+                                    version.append(['==', f"{element4.text}"])
+                                elif tag4 == "ge":
+                                    version.append(['>=', f"{element4.text}"])
+                                elif tag4 == "gt":
+                                    version.append(['>', f"{element4.text}"])
                             ranges.append(version)
                     for name in names:
-                        vuxml[vuln_vid]['affects'][name] = ranges
+                        vuxml[vuln_vid]["affects"][name] = ranges
 
-                elif tag1 == 'description':
+                elif tag1 == "description":
                     description += _get_sub_description(element2)
 
-                elif tag1 == 'references':
-                    vuxml[vuln_vid]['references'].append({tag2: text})
+                elif tag1 == "references":
+                    vuxml[vuln_vid]["references"].append({tag2: text})
 
-                elif tag1 == 'dates':
-                    vuxml[vuln_vid]['dates'][tag2] = text
+                elif tag1 == "dates":
+                    vuxml[vuln_vid]["dates"][tag2] = text
 
             if description:
-                vuxml[vuln_vid]['description'] = description
+                vuxml[vuln_vid]["description"] = description
 
     return vuxml
 
@@ -186,10 +171,10 @@ def get_vulns_by_topics(vuxml):
 
     topics = {}
     for vuln_vid, vuln_data in vuxml.items():
-        if vuln_data['topic'] in topics:
-            topics[vuln_data['topic']].append(vuln_vid)
+        if vuln_data["topic"] in topics:
+            topics[vuln_data["topic"]].append(vuln_vid)
         else:
-            topics[vuln_data['topic']] = [vuln_vid]
+            topics[vuln_data["topic"]] = [vuln_vid]
 
     return topics
 
@@ -202,7 +187,7 @@ def get_vulns_by_packages(vuxml):
 
     packages = {}
     for vuln_vid, vuln_data in vuxml.items():
-        for package, version_ranges in vuln_data['affects'].items():
+        for package, version_ranges in vuln_data["affects"].items():
             for version_range in version_ranges:
                 if package in packages:
                     packages[package].append([version_range, vuln_vid])
@@ -220,7 +205,7 @@ def get_vulns_by_references(vuxml):
 
     references = {}
     for vuln_vid, vuln_data in vuxml.items():
-        for reference in vuln_data['references']:
+        for reference in vuln_data["references"]:
             for key, value in reference.items():
                 if key in references:
                     if  value in references[key]:
@@ -242,11 +227,11 @@ def get_vulns_by_discovery_dates(vuxml):
 
     discovery_dates = {}
     for vuln_vid, vuln_data in vuxml.items():
-        if 'discovery' in vuln_data['dates']:
-            if vuln_data['dates']['discovery'] in discovery_dates:
-                discovery_dates[vuln_data['dates']['discovery']].append(vuln_vid)
+        if "discovery" in vuln_data["dates"]:
+            if vuln_data["dates"]["discovery"] in discovery_dates:
+                discovery_dates[vuln_data["dates"]["discovery"]].append(vuln_vid)
             else:
-                discovery_dates[vuln_data['dates']['discovery']] = [vuln_vid]
+                discovery_dates[vuln_data["dates"]["discovery"]] = [vuln_vid]
 
     return discovery_dates
 
@@ -259,11 +244,11 @@ def get_vulns_by_entry_dates(vuxml):
 
     entry_dates = {}
     for vuln_vid, vuln_data in vuxml.items():
-        if 'entry' in vuln_data['dates']:
-            if vuln_data['dates']['entry'] in entry_dates:
-                entry_dates[vuln_data['dates']['entry']].append(vuln_vid)
+        if "entry" in vuln_data["dates"]:
+            if vuln_data["dates"]["entry"] in entry_dates:
+                entry_dates[vuln_data["dates"]["entry"]].append(vuln_vid)
             else:
-                entry_dates[vuln_data['dates']['entry']] = [vuln_vid]
+                entry_dates[vuln_data["dates"]["entry"]] = [vuln_vid]
 
     return entry_dates
 
@@ -276,11 +261,11 @@ def get_vulns_by_modified_dates(vuxml):
 
     modified_dates = {}
     for vuln_vid, vuln_data in vuxml.items():
-        if 'modified' in vuln_data['dates']:
-            if vuln_data['dates']['modified'] in modified_dates:
-                modified_dates[vuln_data['dates']['modified']].append(vuln_vid)
+        if "modified" in vuln_data["dates"]:
+            if vuln_data["dates"]["modified"] in modified_dates:
+                modified_dates[vuln_data["dates"]["modified"]].append(vuln_vid)
             else:
-                modified_dates[vuln_data['dates']['modified']] = [vuln_vid]
+                modified_dates[vuln_data["dates"]["modified"]] = [vuln_vid]
 
     return modified_dates
 
@@ -302,11 +287,11 @@ def search_vulns_by_regex(vuxml, regex_string, in_topics=True, in_descriptions=T
 
     vulns = []
     for vuln_vid, vuln_data in vuxml.items():
-        if in_topics and 'topic' in vuln_data:
-            if re.search(regex, vuln_data['topic']):
+        if in_topics and "topic" in vuln_data:
+            if re.search(regex, vuln_data["topic"]):
                 vulns.append(vuln_vid)
-        if in_descriptions and 'description' in vuln_data:
-            if re.search(regex, vuln_data['description']):
+        if in_descriptions and "description" in vuln_data:
+            if re.search(regex, vuln_data["description"]):
                 if vuln_vid not in vulns:
                     vulns.append(vuln_vid)
 
@@ -349,7 +334,23 @@ def search_vulns_by_package(vuxml, package_name, package_version, regex_names=Fa
                     if vid not in vulns:
                         vulns.append(vid)
                 else:
-                    package_version2 = packaging.version.parse(package_version)
+                    package_version_orig = package_version
+                    # We don't handle PORTEPOCH
+                    if "," in package_version:
+                        package_version = re.sub(r",.*", "", package_version)
+                    # PORTREVISION is treated as a sub version
+                    if "_" in package_version:
+                        package_version = re.sub(r"_", ".", package_version)
+                    try:
+                        package_version2 = packaging.version.parse(package_version)
+                    except packaging.version.InvalidVersion:
+                        logging.warning(
+                            "Invalid version '%s' (translated as '%s') for specified package '%s'",
+                            package_version_orig,
+                            package_version,
+                            package_name
+                        )
+                        continue
 
                     conditions = version_range[0]
                     test_results = True
@@ -361,36 +362,44 @@ def search_vulns_by_package(vuxml, package_name, package_version, regex_names=Fa
                         # The packaging module doesn't know how to handle some version numbers
                         # (it's made only for Python packages versions)
                         # I should write my own!
+                        affected_version_orig = affected_version
+                        # We don't handle PORTEPOCH
+                        if "," in affected_version:
+                            affected_version = re.sub(r",.*", "", affected_version)
+                        # PORTREVISION is treated as a sub version
+                        if "_" in affected_version:
+                            affected_version = re.sub(r"_", ".", affected_version)
+                        # version.* is treated as version
+                        if ".*" in affected_version:
+                            affected_version = re.sub(r"\.\*", "", affected_version)
                         try:
                             affected_version2 = packaging.version.parse(affected_version)
                         except packaging.version.InvalidVersion:
-                            altered_affected_version = re.sub(r"_.*", "", affected_version)
-                            altered_affected_version = re.sub(r",.*", "", altered_affected_version)
-                            altered_affected_version = re.sub(r"\.\*", "", altered_affected_version)
-                            logging.debug(
-                                "Version number '%s' handled as '%s'",
+                            logging.warning(
+                                "Invalid version '%s' (translated as '%s') for affected package '%s'",
+                                affected_version_orig,
                                 affected_version,
-                                altered_affected_version
+                                name
                             )
-                            affected_version2 = packaging.version.parse(altered_affected_version)
+                            continue
 
-                        if operator == '>':
+                        if operator == ">":
                             if package_version2 <= affected_version2:
                                 test_results = False
                                 break
-                        elif operator == '>=':
+                        elif operator == ">=":
                             if package_version2 < affected_version2:
                                 test_results = False
                                 break
-                        elif operator == '==':
+                        elif operator == "==":
                             if package_version2 != affected_version2:
                                 test_results = False
                                 break
-                        elif operator == '<=':
+                        elif operator == "<=":
                             if package_version2 > affected_version2:
                                 test_results = False
                                 break
-                        elif operator == '<':
+                        elif operator == "<":
                             if package_version2 >= affected_version2:
                                 test_results = False
                                 break
@@ -505,36 +514,36 @@ def print_vuln(vid, vuln, show_description=False):
     red_bg = colorama.Back.RED
     normal = colorama.Style.RESET_ALL
     print(f"{bright}Vulnerability ID:{normal} {vid}")
-    if 'topic' in vuln:
+    if "topic" in vuln:
         print(f"  {bright}Topic:{normal} {red_bg}{vuln['topic']}{normal}")
-    if 'affects' in vuln:
+    if "affects" in vuln:
         print(f"  {bright}Affects:{normal}")
-        for package_name, package_version_ranges in vuln['affects'].items():
+        for package_name, package_version_ranges in vuln["affects"].items():
             print(f"    {bright}{red}{package_name}{normal}:")
             for package_version_range in package_version_ranges:
                 print("      ", end="")
                 for condition in package_version_range:
                     print(f"{condition[0]} {condition[1]} ; ", end="")
                 print()
-    if show_description and 'description' in vuln:
+    if show_description and "description" in vuln:
         print(f"  {bright}Description:{normal}")
         text_maker = html2text.HTML2Text()
         text_maker.ignore_links = True
         text_maker.bypass_tables = False
-        text = text_maker.handle(vuln['description'])
+        text = text_maker.handle(vuln["description"])
         for line in text.split('/n'):
             print(f"    {line}")
-    if 'references' in vuln:
-        if len(vuln['references']):
+    if "references" in vuln:
+        if len(vuln["references"]):
             print(f"  {bright}References:{normal}")
-            for reference in vuln['references']:
+            for reference in vuln["references"]:
                 for key, value in reference.items():
                     print(f"    {key}: {value}")
-    if 'dates' in vuln:
-        if 'discovery' in vuln['dates']:
+    if "dates" in vuln:
+        if "discovery" in vuln["dates"]:
             print(f"  {bright}Discovery date:{normal} {vuln['dates']['discovery']}")
-        if 'entry' in vuln['dates']:
+        if "entry" in vuln["dates"]:
             print(f"  {bright}Entry date:{normal} {vuln['dates']['entry']}")
-        if 'modified' in vuln['dates']:
+        if "modified" in vuln["dates"]:
             print(f"  {bright}Modified date:{normal} {vuln['dates']['modified']}")
     print()

@@ -195,7 +195,9 @@ While working on the
 tool, I noticed that some Python packages installed as FreeBSD ports
 where marked as vulnerable in Python advisories but not in FreeBSD ports advisories.
 .Pp
-I made a tool to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
+I made a tool called
+.Xr pysec2vuxml
+to check the 4000+ FreeBSD ports of Python packages, and found around 1% of them vulnerable.
 .Pp
 So I made this library in order to verify if these vulnerable ports where also marked as vulnerable in FreeBSD VuXML,
 and got carried away writing a full utility demonstrating its use!
@@ -204,6 +206,7 @@ This library is available under the 3\-clause BSD license.
 .Sh AUTHORS
 .An Hubert Tournier
 .Sh CAVEATS
-PORTREVISION and PORTEPOCH (ie. software versions ending with "_number" or ",number")
-are not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
-I would have to develop my own versions comparison library in order to handle that (well, maybe one day :\-) ).
+PORTEPOCH (ie. software versions ending with ",number")
+is not taken into account when checking if a vulnerable Python package is also a vulnerable FreeBSD port.
+.Pp
+Exotic version numbers (ie. with letters for example) are also not taken into account.
