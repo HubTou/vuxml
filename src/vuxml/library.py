@@ -344,7 +344,7 @@ def search_vulns_by_package(vuxml, package_name, package_version, regex_names=Fa
                     try:
                         package_version2 = packaging.version.parse(package_version)
                     except packaging.version.InvalidVersion:
-                        logging.warning(
+                        logging.debug(
                             "Invalid version '%s' (translated as '%s') for specified package '%s'",
                             package_version_orig,
                             package_version,
@@ -375,7 +375,7 @@ def search_vulns_by_package(vuxml, package_name, package_version, regex_names=Fa
                         try:
                             affected_version2 = packaging.version.parse(affected_version)
                         except packaging.version.InvalidVersion:
-                            logging.warning(
+                            logging.debug(
                                 "Invalid version '%s' (translated as '%s') for affected package '%s'",
                                 affected_version_orig,
                                 affected_version,
